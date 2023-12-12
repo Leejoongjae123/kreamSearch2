@@ -1,6 +1,5 @@
 import openpyxl
 import pandas as pd
-from pyautogui import size
 import subprocess
 import shutil
 from bs4 import BeautifulSoup
