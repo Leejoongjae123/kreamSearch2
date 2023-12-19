@@ -1163,9 +1163,13 @@ def fetchData():
                         makeFlag = False
                     elif makeFlag == False:
                         count = 0
-                        new_sheet = wb.create_sheet(
-                            remove_special_characters(basicData['modelCode']) + result[0]['size'])
-                        ws = wb[remove_special_characters(basicData['modelCode']) + result[0]['size']]
+                        try:
+                            new_sheet = wb.create_sheet(
+                                remove_special_characters(basicData['modelCode']) + result[0]['size'])
+                            ws = wb[remove_special_characters(basicData['modelCode']) + result[0]['size']]
+                        except:
+                            print('에러로넘어감')
+                            continue
                         columnName = ['상품URL', '전체거래가평균(O)', '전체 거래가 평균(X)', '전체 거래가 평균(O+X)',
                                       '3개 까지의 거래가 평균(X)/전체 거래가 평균(X)',
                                       '전체 거래가 평균(O)/전체 거래가 평균(X)(=B/C)', '체결거래수(O+X)', '구매입찰 개수/판매입찰 개수',
