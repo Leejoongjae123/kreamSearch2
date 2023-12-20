@@ -806,7 +806,7 @@ def GetToken():
     #대표님 서버 계정
     json_data = {
         'email': 'skytogether7@naver.com',
-        'password': 'Qotpgksdl1!',
+        'password': 'zmfla002*',
     }
 
     response = requests.post('https://kream.co.kr/api/auth/login', cookies=cookies, headers=headers,
