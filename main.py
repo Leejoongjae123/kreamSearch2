@@ -805,7 +805,7 @@ def GetToken():
     # }
     #대표님 서버 계정
     json_data = {
-        'email': 'skytogether7',
+        'email': 'skytogether7@naver.com',
         'password': 'Qotpgksdl1!',
     }
 
@@ -1483,12 +1483,14 @@ def fetchData():
         SendMail(catIndex, searchfilename)
 
 
+firstFlag=True
 while True:
     timeNow=datetime.datetime.now().strftime("%H%M%S")
     targetTime="010000"
     print("현재시간:{}/목표시간:{}".format(timeNow,targetTime))
-    if timeNow=="010000":
+    if timeNow=="010000" or firstFlag==True:
         fetchData()
+        firstFlag=False
     time.sleep(1)
 
 # wb=openpyxl.load_workbook('search_result_20230915_195707.xlsx')
