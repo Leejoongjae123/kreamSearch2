@@ -1146,222 +1146,225 @@ def fetchData():
 
             # =============각 사이즈들끼리 계산
             for index, result in enumerate(results):
+                try:
+                    # 'category'가 'CG'인 항목 수 세기
+                    count = sum(1 for item in result if item['category'] == 'CG' and item['immediate'] is False)
 
-                # 'category'가 'CG'인 항목 수 세기
-                count = sum(1 for item in result if item['category'] == 'CG' and item['immediate'] is False)
-
-                # 판단
-                if count <= skipCount:
-                    print('size:', result[0]['size'])
-                    print("category가 CG/False인 항목이 3개 이하입니다.")
-                    print("========================================")
-                else:
-                    if makeFlag == True:
-                        count = 0
-                        ws.title = remove_special_characters(basicData['modelCode']) + result[0]['size']
-
-                        makeFlag = False
-                    elif makeFlag == False:
-                        count = 0
-                        try:
-                            new_sheet = wb.create_sheet(
-                                remove_special_characters(basicData['modelCode']) + result[0]['size'])
-                            ws = wb[remove_special_characters(basicData['modelCode']) + result[0]['size']]
-                        except:
-                            print('에러로넘어감')
-                            continue
-                        columnName = ['상품URL', '전체거래가평균(O)', '전체 거래가 평균(X)', '전체 거래가 평균(O+X)',
-                                      '3개 까지의 거래가 평균(X)/전체 거래가 평균(X)',
-                                      '전체 거래가 평균(O)/전체 거래가 평균(X)(=B/C)', '체결거래수(O+X)', '구매입찰 개수/판매입찰 개수',
-                                      '거래가 평균(X)/매도 호가',
-                                      '판매 호가(첫 행값)/발매가',
-                                      '판매입찰 개수', '거래가 평균(X)/매수 호가', '구매 호가(첫 행값) / 발매가', '구매입찰개수']
-                        ws.append(columnName)
-
-                    print('size:', result[0]['size'])
-                    print("category가 CG/False인 항목이 3개를 초과합니다.")
-                    cg_prices = [item['price'] for item in result if item['category'] == 'CG' and item['immediate']]
-
-                    if cg_prices:
-                        valueB = int(sum(cg_prices) / len(cg_prices))
-                        print(f"'category'가 'CG'이면서 'immediate'가 True인 경우의 'price'의 평균은 {valueB} 입니다.")
+                    # 판단
+                    if count <= skipCount:
+                        print('size:', result[0]['size'])
+                        print("category가 CG/False인 항목이 3개 이하입니다.")
+                        print("========================================")
                     else:
-                        print("해당 조건을 만족하는 항목이 없습니다.")
-                        valueB = 0
-                    print('valueB:', valueB)
-                    cg_prices = [item['price'] for item in result if item['category'] == 'CG' and not item['immediate']]
-                    # 'cg_prices' 리스트의 평균 계산
-                    if cg_prices:
-                        valueC = int(sum(cg_prices) / len(cg_prices))
-                        print(f"'category'가 'CG'이면서 'immediate'가 False인 경우의 'price'의 평균은 {valueC} 입니다.")
-                    else:
-                        print("해당 조건을 만족하는 항목이 없습니다.")
-                        valueC = 0
-                    print('valueC:', valueC)
+                        if makeFlag == True:
+                            count = 0
+                            ws.title = remove_special_characters(basicData['modelCode']) + result[0]['size']
 
-                    cg_prices = [item['price'] for item in result if item['category'] == 'CG']
-                    # 'cg_prices' 리스트의 평균 계산
-                    if cg_prices:
-                        valueD = int(sum(cg_prices) / len(cg_prices))
-                        print(f"'category'가 'CG'이면서 'immediate'가 False인 경우의 'price'의 평균은 {valueD} 입니다.")
-                    else:
-                        print("해당 조건을 만족하는 항목이 없습니다.")
-                        valueD = 0
-                    print('valueD:', valueD)
+                            makeFlag = False
+                        elif makeFlag == False:
+                            count = 0
+                            try:
+                                new_sheet = wb.create_sheet(
+                                    remove_special_characters(basicData['modelCode']) + result[0]['size'])
+                                ws = wb[remove_special_characters(basicData['modelCode']) + result[0]['size']]
+                            except:
+                                print('에러로넘어감')
+                                continue
+                            columnName = ['상품URL', '전체거래가평균(O)', '전체 거래가 평균(X)', '전체 거래가 평균(O+X)',
+                                          '3개 까지의 거래가 평균(X)/전체 거래가 평균(X)',
+                                          '전체 거래가 평균(O)/전체 거래가 평균(X)(=B/C)', '체결거래수(O+X)', '구매입찰 개수/판매입찰 개수',
+                                          '거래가 평균(X)/매도 호가',
+                                          '판매 호가(첫 행값)/발매가',
+                                          '판매입찰 개수', '거래가 평균(X)/매수 호가', '구매 호가(첫 행값) / 발매가', '구매입찰개수']
+                            ws.append(columnName)
 
-                    cg_prices = [item['price'] for item in result if item['category'] == 'CG' and not item['immediate']]
-                    # 'cg_prices' 리스트의 평균 계산
-                    cg_prices = cg_prices[:3]
-                    if cg_prices:
-                        valueE = int(sum(cg_prices) / len(cg_prices))
-                        print(f"'category'가 'CG'이면서 'immediate'가 False인 경우의 'price'의 평균은 {valueE} 입니다.")
-                    else:
-                        print("해당 조건을 만족하는 항목이 없습니다.")
-                        valueE = 0
-                    valueE = valueE / valueC
-                    print('valueE:', valueE)
+                        print('size:', result[0]['size'])
+                        print("category가 CG/False인 항목이 3개를 초과합니다.")
+                        cg_prices = [item['price'] for item in result if item['category'] == 'CG' and item['immediate']]
 
-                    try:
-                        valueF = valueB / (valueC - 1) * 100
-                    except:
-                        valueF = 0
-                    print('valueF:', valueF)
-
-                    valueG = sum(1 for item in result if item['category'] == 'CG')
-                    print('valueG:', valueG)
-
-                    try:
-                        lowest_price = min(item['price'] for item in result if item['category'] == 'PM')
-                    except:
-                        lowest_price = 0
-
-                    try:
-                        valueJ = lowest_price / basicData['originPrice']
-                    except:
-                        valueJ = 0
-                    print("valueJ:", valueJ)
-
-                    try:
-                        valueI = valueC / lowest_price * 100
-                    except:
-                        valueI = 0
-                    print('valueI:', valueI)
-
-                    try:
-                        valueK = sum(item['quantity'] for item in result if item['category'] == 'PM')
-                    except:
-                        valueK = 0
-                    print('valueK:', valueK)
-
-                    gm_items = [item for item in result if item['category'] == 'GM']
-
-                    try:
-                        if gm_items:
-                            highest_price = max(gm_items, key=lambda x: x['price'])['price']
-                            print(highest_price)
+                        if cg_prices:
+                            valueB = int(sum(cg_prices) / len(cg_prices))
+                            print(f"'category'가 'CG'이면서 'immediate'가 True인 경우의 'price'의 평균은 {valueB} 입니다.")
                         else:
-                            print("No 'GM' category items found.")
+                            print("해당 조건을 만족하는 항목이 없습니다.")
+                            valueB = 0
+                        print('valueB:', valueB)
+                        cg_prices = [item['price'] for item in result if item['category'] == 'CG' and not item['immediate']]
+                        # 'cg_prices' 리스트의 평균 계산
+                        if cg_prices:
+                            valueC = int(sum(cg_prices) / len(cg_prices))
+                            print(f"'category'가 'CG'이면서 'immediate'가 False인 경우의 'price'의 평균은 {valueC} 입니다.")
+                        else:
+                            print("해당 조건을 만족하는 항목이 없습니다.")
+                            valueC = 0
+                        print('valueC:', valueC)
+
+                        cg_prices = [item['price'] for item in result if item['category'] == 'CG']
+                        # 'cg_prices' 리스트의 평균 계산
+                        if cg_prices:
+                            valueD = int(sum(cg_prices) / len(cg_prices))
+                            print(f"'category'가 'CG'이면서 'immediate'가 False인 경우의 'price'의 평균은 {valueD} 입니다.")
+                        else:
+                            print("해당 조건을 만족하는 항목이 없습니다.")
+                            valueD = 0
+                        print('valueD:', valueD)
+
+                        cg_prices = [item['price'] for item in result if item['category'] == 'CG' and not item['immediate']]
+                        # 'cg_prices' 리스트의 평균 계산
+                        cg_prices = cg_prices[:3]
+                        if cg_prices:
+                            valueE = int(sum(cg_prices) / len(cg_prices))
+                            print(f"'category'가 'CG'이면서 'immediate'가 False인 경우의 'price'의 평균은 {valueE} 입니다.")
+                        else:
+                            print("해당 조건을 만족하는 항목이 없습니다.")
+                            valueE = 0
+                        valueE = valueE / valueC
+                        print('valueE:', valueE)
+
+                        try:
+                            valueF = valueB / (valueC - 1) * 100
+                        except:
+                            valueF = 0
+                        print('valueF:', valueF)
+
+                        valueG = sum(1 for item in result if item['category'] == 'CG')
+                        print('valueG:', valueG)
+
+                        try:
+                            lowest_price = min(item['price'] for item in result if item['category'] == 'PM')
+                        except:
+                            lowest_price = 0
+
+                        try:
+                            valueJ = lowest_price / basicData['originPrice']
+                        except:
+                            valueJ = 0
+                        print("valueJ:", valueJ)
+
+                        try:
+                            valueI = valueC / lowest_price * 100
+                        except:
+                            valueI = 0
+                        print('valueI:', valueI)
+
+                        try:
+                            valueK = sum(item['quantity'] for item in result if item['category'] == 'PM')
+                        except:
+                            valueK = 0
+                        print('valueK:', valueK)
+
+                        gm_items = [item for item in result if item['category'] == 'GM']
+
+                        try:
+                            if gm_items:
+                                highest_price = max(gm_items, key=lambda x: x['price'])['price']
+                                print(highest_price)
+                            else:
+                                print("No 'GM' category items found.")
+                                highest_price = 0
+                        except:
                             highest_price = 0
-                    except:
-                        highest_price = 0
-                    try:
-                        valueM = highest_price / basicData['originPrice']
-                    except:
-                        valueM = 0
-                    # print('highestPrice:',highest_price,valueB)
-                    print('valueM:', valueM)
+                        try:
+                            valueM = highest_price / basicData['originPrice']
+                        except:
+                            valueM = 0
+                        # print('highestPrice:',highest_price,valueB)
+                        print('valueM:', valueM)
 
-                    try:
-                        valueL = valueC / highest_price * 100
-                    except:
-                        valueL = 0
-                    print('valueL:', valueL)
+                        try:
+                            valueL = valueC / highest_price * 100
+                        except:
+                            valueL = 0
+                        print('valueL:', valueL)
 
-                    valueN = sum(item['quantity'] for item in result if item['category'] == 'GM')
+                        valueN = sum(item['quantity'] for item in result if item['category'] == 'GM')
 
-                    # 결과 출력
-                    print('valueN:', valueN)
+                        # 결과 출력
+                        print('valueN:', valueN)
 
-                    try:
-                        valueH = valueN / valueK
-                    except:
-                        valueH = 0
-                    print('valueH:', valueH)
+                        try:
+                            valueH = valueN / valueK
+                        except:
+                            valueH = 0
+                        print('valueH:', valueH)
 
-                    ws.cell(row=2, column=2).value = valueB
-                    ws.cell(row=2, column=3).value = valueC
-                    ws.cell(row=2, column=4).value = valueD
-                    ws.cell(row=2, column=5).value = valueE
-                    ws.cell(row=2, column=6).value = valueF
-                    ws.cell(row=2, column=7).value = valueG
-                    ws.cell(row=2, column=8).value = valueH
-                    ws.cell(row=2, column=9).value = valueI
-                    ws.cell(row=2, column=10).value = valueJ
-                    ws.cell(row=2, column=11).value = valueK
-                    ws.cell(row=2, column=12).value = valueL
-                    ws.cell(row=2, column=13).value = valueM
-                    ws.cell(row=2, column=14).value = valueN
+                        ws.cell(row=2, column=2).value = valueB
+                        ws.cell(row=2, column=3).value = valueC
+                        ws.cell(row=2, column=4).value = valueD
+                        ws.cell(row=2, column=5).value = valueE
+                        ws.cell(row=2, column=6).value = valueF
+                        ws.cell(row=2, column=7).value = valueG
+                        ws.cell(row=2, column=8).value = valueH
+                        ws.cell(row=2, column=9).value = valueI
+                        ws.cell(row=2, column=10).value = valueJ
+                        ws.cell(row=2, column=11).value = valueK
+                        ws.cell(row=2, column=12).value = valueL
+                        ws.cell(row=2, column=13).value = valueM
+                        ws.cell(row=2, column=14).value = valueN
 
-                    ws.cell(row=3, column=1).value = "사진"
-                    ws.cell(row=3, column=2).value = "발매가"
-                    ws.cell(row=3, column=3).value = "품명"
-                    ws.cell(row=3, column=4).value = "모델번호"
-                    ws.cell(row=3, column=5).value = "체결사이즈"
-                    ws.cell(row=3, column=6).value = "거래가"
-                    ws.cell(row=3, column=7).value = "번개"
-                    ws.cell(row=3, column=8).value = "거래일"
-                    ws.cell(row=3, column=9).value = "판매입찰사이즈"
-                    ws.cell(row=3, column=10).value = "판매희망가"
-                    ws.cell(row=3, column=11).value = "수량"
-                    ws.cell(row=3, column=12).value = "구매입찰사이즈"
-                    ws.cell(row=3, column=13).value = "구매희망가"
-                    ws.cell(row=3, column=14).value = "수량"
+                        ws.cell(row=3, column=1).value = "사진"
+                        ws.cell(row=3, column=2).value = "발매가"
+                        ws.cell(row=3, column=3).value = "품명"
+                        ws.cell(row=3, column=4).value = "모델번호"
+                        ws.cell(row=3, column=5).value = "체결사이즈"
+                        ws.cell(row=3, column=6).value = "거래가"
+                        ws.cell(row=3, column=7).value = "번개"
+                        ws.cell(row=3, column=8).value = "거래일"
+                        ws.cell(row=3, column=9).value = "판매입찰사이즈"
+                        ws.cell(row=3, column=10).value = "판매희망가"
+                        ws.cell(row=3, column=11).value = "수량"
+                        ws.cell(row=3, column=12).value = "구매입찰사이즈"
+                        ws.cell(row=3, column=13).value = "구매희망가"
+                        ws.cell(row=3, column=14).value = "수량"
 
-                    ws.cell(row=4, column=1).value = basicData['imageUrl']
-                    ws.cell(row=4, column=2).value = basicData['originPrice']
-                    ws.cell(row=4, column=3).value = basicData['title']
-                    ws.cell(row=4, column=4).value = basicData['modelCode']
-                    ws.cell(row=2, column=1).value = basicData['url']
+                        ws.cell(row=4, column=1).value = basicData['imageUrl']
+                        ws.cell(row=4, column=2).value = basicData['originPrice']
+                        ws.cell(row=4, column=3).value = basicData['title']
+                        ws.cell(row=4, column=4).value = basicData['modelCode']
+                        ws.cell(row=2, column=1).value = basicData['url']
 
-                    listCG = [[item['size'], item['price'], item['immediate'], item['transactionDate']] for item in
-                              result
-                              if item['category'] == 'CG']
+                        listCG = [[item['size'], item['price'], item['immediate'], item['transactionDate']] for item in
+                                  result
+                                  if item['category'] == 'CG']
 
-                    for elemCG in listCG:
-                        ws.cell(row=4 + count, column=5).value = elemCG[0]
-                        ws.cell(row=4 + count, column=6).value = elemCG[1]
-                        ws.cell(row=4 + count, column=7).value = elemCG[2]
-                        ws.cell(row=4 + count, column=8).value = elemCG[3]
-                        count += 1
+                        for elemCG in listCG:
+                            ws.cell(row=4 + count, column=5).value = elemCG[0]
+                            ws.cell(row=4 + count, column=6).value = elemCG[1]
+                            ws.cell(row=4 + count, column=7).value = elemCG[2]
+                            ws.cell(row=4 + count, column=8).value = elemCG[3]
+                            count += 1
 
-                    listPM = [[item['size'], item['price'], item['quantity']] for item in result
-                              if item['category'] == 'PM']
-                    count = 0
-                    for elemPM in listPM:
-                        ws.cell(row=4 + count, column=9).value = elemPM[0]
-                        ws.cell(row=4 + count, column=10).value = elemPM[1]
-                        ws.cell(row=4 + count, column=11).value = elemPM[2]
-                        count += 1
+                        listPM = [[item['size'], item['price'], item['quantity']] for item in result
+                                  if item['category'] == 'PM']
+                        count = 0
+                        for elemPM in listPM:
+                            ws.cell(row=4 + count, column=9).value = elemPM[0]
+                            ws.cell(row=4 + count, column=10).value = elemPM[1]
+                            ws.cell(row=4 + count, column=11).value = elemPM[2]
+                            count += 1
 
-                    listGM = [[item['size'], item['price'], item['quantity']] for item in result
-                              if item['category'] == 'GM']
-                    count = 0
-                    for elemGM in listGM:
-                        ws.cell(row=4 + count, column=12).value = elemGM[0]
-                        ws.cell(row=4 + count, column=13).value = elemGM[1]
-                        ws.cell(row=4 + count, column=14).value = elemGM[2]
-                        count += 1
+                        listGM = [[item['size'], item['price'], item['quantity']] for item in result
+                                  if item['category'] == 'GM']
+                        count = 0
+                        for elemGM in listGM:
+                            ws.cell(row=4 + count, column=12).value = elemGM[0]
+                            ws.cell(row=4 + count, column=13).value = elemGM[1]
+                            ws.cell(row=4 + count, column=14).value = elemGM[2]
+                            count += 1
 
-                    # 첫 번째 행 고정
-                    ws.freeze_panes = 'A2'
+                        # 첫 번째 행 고정
+                        ws.freeze_panes = 'A2'
 
-                    column_range="A:R"
-                    # # 전체 열에 필터 적용
-                    ws.auto_filter.ref = column_range
+                        column_range="A:R"
+                        # # 전체 열에 필터 적용
+                        ws.auto_filter.ref = column_range
 
-                    fname='result_{}.xlsx'.format(timeNow)
-                    wb.save(fname)
-                    print("========================================")
+                        fname='result_{}.xlsx'.format(timeNow)
+                        wb.save(fname)
+                        print("========================================")
+                except:
+                    print("에러발생으로 건너뜀22")
+
             time.sleep(random.randint(10,20)*0.1)
 
         switchD = "NONE"
